@@ -120,9 +120,9 @@
 	</div>
 
     <div class="container" style="margin-top: 10px;">
-        <form onsubmit="return enviarMensaje1()">
+        <form method="POST" action="/formulario" onsubmit="return enviarMensaje1()">
           <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="Escribe un mensaje..." id="mensaje1" autocomplete="off">
+            <input type="text" class="form-control" placeholder="Escribe un mensaje..." id="mensaje1" name="mensaje1" autocomplete="off">
             <button class="btn btn-primary" type="submit"><i class="fas fa-paper-plane"></i></button>
           </div>
         </form>
@@ -136,6 +136,8 @@
           </div>
         </form>
       </div>
+
+
     
 
 </body>

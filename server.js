@@ -4,7 +4,51 @@ const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const multer = require('multer');
+const bodyParser = require('body-parser');
 const path = require('path');
+const mongoose = require('mongoose');
+const mongoUrl = 'mongodb://localhost:27017/lab05';
+
+
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+
+// Conecta a la base de datos
+mongoose.connect(mongoUrl, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'Error de conexión:'));
+db.once('open', function() {
+  console.log('Conexión exitosa a la base de datos');
+});
+
+
+// Definición del modelo
+const mensajeSchema = new mongoose.Schema({
+  contenido: String
+});
+
+const Mensaje = mongoose.model('Mensaje', mensajeSchema);
+
+app.post('/', function(req, res) {
+  const nuevoMensaje = new Mensaje({
+    contenido: req.body.mensaje1
+  });
+
+  nuevoMensaje.save(function (err, mensaje1) {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Error al guardar el mensaje');
+    } else {
+      console.log('Mensaje guardado en la base de datos:', mensaje1);
+      res.status(200).send('Mensaje guardado correctamente');
+    }
+  });
+});
 
 // Configuramos multer
 const storage = multer.diskStorage({
@@ -57,6 +101,6 @@ io.on('connection', function(socket){
 });
 
 // Iniciar el servidor HTTP en el puerto 3000
-http.listen(3000, function(){
-    console.log('Servidor escuchando en http://localhost:3000');
+http.listen(5000, function(){
+    console.log('Servidor escuchando en http://localhost:5000');
 });
